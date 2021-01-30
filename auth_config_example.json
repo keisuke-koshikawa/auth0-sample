@@ -1,0 +1,5 @@
+{
+  "domain": "your_auth0_domain",
+  "client_id": "your_auth0_client_id",
+  "redirect_uri": "your_redirect_uri"
+}
