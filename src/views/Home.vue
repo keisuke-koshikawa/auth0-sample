@@ -1,18 +1,32 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div v-if="!auth.loading.value">
+    <button v-if="!auth.isAuthenticated.value" @click="handleLogin">Log in</button>
+    <div v-if="auth.isAuthenticated.value">
+      <button @click="handleLogout">Log out</button>
+      <p>{{ auth.user.value.name }}</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+import { defineComponent, inject } from 'vue'
 
 export default defineComponent({
   name: 'Home',
-  components: {
-    HelloWorld
+  setup () {
+    const auth = inject<any>('$auth')
+
+    return {
+      auth,
+      handleLogin: () => {
+        auth.loginWithRedirect()
+      },
+      handleLogout: () => {
+        auth.logout({
+          returnTo: window.location.origin
+        })
+      }
+    }
   }
 })
 </script>
