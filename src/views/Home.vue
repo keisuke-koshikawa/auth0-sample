@@ -1,4 +1,5 @@
 <template>
+  <button @click="handleGetChirps">Get Chirps</button>
   <div v-if="!auth.loading.value">
     <button v-if="!auth.isAuthenticated.value" @click="handleLogin">Log in</button>
     <div v-if="auth.isAuthenticated.value">
@@ -10,14 +11,25 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
+import { getChirps } from '@/api/chirp'
 
 export default defineComponent({
   name: 'Home',
   setup () {
     const auth = inject<any>('$auth')
 
+    let chirps = {}
+
+    const handleGetChirps = async () => {
+      const res = await auth.getTokenSilently()
+      await getChirps(res).then((res) => {
+        chirps = res
+      })
+    }
+
     return {
       auth,
+      handleGetChirps,
       handleLogin: () => {
         auth.loginWithRedirect()
       },
